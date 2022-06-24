@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import Video from "../components/Video";
-import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
-import { ethers } from "ethers";
 import getContract from "../utils/getContract";
+import Video from "../components/Video";
 
 export default function Main() {
   const [videos, setVideos] = useState([]);
@@ -16,7 +14,7 @@ export default function Main() {
   const getBlockChainData = async () => {
     setLoading(true);
     let contract = await getContract();
-    let videosCount = await contract.videoCount();
+    let videosCount = await contract.currentVideoId();
     console.log(String(videosCount));
     let videos = [];
     for (var i = videosCount; i >= 1; i--) {
@@ -58,7 +56,7 @@ export default function Main() {
         <Header search={(text) => filterData(text)} />
         <div className="flex flex-row flex-wrap">
           {videos.map((video) => (
-            <Link to={`/video?id=${video.id}`}>
+            <Link to={`/video?id=${video.id}`} key={video.id}>
               <div className="w-80">
                 <Video video={video} />
               </div>
@@ -70,7 +68,7 @@ export default function Main() {
               {Array(loadingArray)
                 .fill(0)
                 .map((_, index) => (
-                  <div className="w-80">
+                  <div className="w-80" key={index}>
                     <Loader />
                   </div>
                 ))}
@@ -78,16 +76,16 @@ export default function Main() {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
 const Loader = () => {
   return (
-    <div class="flex flex-col m-5 animate-pulse">
-      <div class="w-full bg-gray-300 dark:bg-borderGray h-40 rounded-lg "></div>
-      <div class="w-50 mt-3 bg-gray-300 dark:bg-borderGray h-6 rounded-md "></div>
-      <div class="w-24 bg-gray-300 h-3 dark:bg-borderGray mt-3 rounded-md "></div>
+    <div className="flex flex-col m-5 animate-pulse">
+      <div className="w-full bg-gray-300 dark:bg-borderGray h-40 rounded-lg "></div>
+      <div className="w-50 mt-3 bg-gray-300 dark:bg-borderGray h-6 rounded-md "></div>
+      <div className="w-24 bg-gray-300 h-3 dark:bg-borderGray mt-3 rounded-md "></div>
     </div>
   );
 };
