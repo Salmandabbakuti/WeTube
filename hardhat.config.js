@@ -6,8 +6,8 @@ require('dotenv').config();
 task("hello", "Prints Hello World", () => console.log("Hello World!"));
 
 task("deploy", "Deploys Contract", async () => {
-  const contractFactory = await ethers.getContractFactory("LandRegistry");
-  const contract = await contractFactory.deploy("0xc2009D705d37A9341d6cD21439CF6B4780eaF2d7");
+  const contractFactory = await ethers.getContractFactory("WeTube");
+  const contract = await contractFactory.deploy();
   await contract.deployed();
   console.log("contract deployed to:", contract.address);
 });
@@ -44,7 +44,7 @@ module.exports = {
     }
   },
   solidity: {
-    version: "0.8.3",
+    version: "0.8.13",
     settings: {
       optimizer: {
         enabled: true,
@@ -61,4 +61,4 @@ module.exports = {
   mocha: {
     timeout: 20000
   }
-}
+};
