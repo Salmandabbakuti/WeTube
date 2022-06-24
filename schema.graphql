@@ -1,0 +1,38 @@
+enum LandStatus {
+  NOT_EXISTS
+  PENDING
+  APPROVED
+  REJECTED
+}
+type Land @entity {
+  id: ID!
+  landId: BigInt! # uint256
+  plotCoords: String! # string
+  area: BigInt! # uint256
+  owner: Bytes! # address
+  verifiedBy: Bytes # address
+  status: LandStatus! # uint8
+  updatedAt: BigInt!
+}
+
+type LandTransfer @entity {
+  id: ID!
+  landId: BigInt! # uint256
+  from: Bytes! # address
+  to: Bytes! # address
+  verifiedBy: Bytes # address
+  status: LandStatus! # uint8
+  updatedAt: BigInt!
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type User @entity {
+  id: ID!
+  address: Bytes! # address
+  role: UserRole! # uint8
+  updatedAt: BigInt!
+}
