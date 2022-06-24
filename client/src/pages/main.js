@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import getContract from "../utils/getContract";
 import Video from "../components/Video";
+import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
+import { ethers } from "ethers";
+import getContract from "../utils/getContract";
 
 export default function Main() {
   const [videos, setVideos] = useState([]);
@@ -56,7 +58,7 @@ export default function Main() {
         <Header search={(text) => filterData(text)} />
         <div className="flex flex-row flex-wrap">
           {videos.map((video) => (
-            <Link to={`/video?id=${video.id}`} key={video.id}>
+            <Link to={`/video?id=${video.id}`}>
               <div className="w-80">
                 <Video video={video} />
               </div>
@@ -68,7 +70,7 @@ export default function Main() {
               {Array(loadingArray)
                 .fill(0)
                 .map((_, index) => (
-                  <div className="w-80" key={index}>
+                  <div className="w-80">
                     <Loader />
                   </div>
                 ))}
@@ -76,7 +78,7 @@ export default function Main() {
           )}
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 

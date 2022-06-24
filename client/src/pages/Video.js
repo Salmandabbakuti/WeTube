@@ -25,7 +25,7 @@ export default function VideoPage() {
     console.log(String(videoId));
     let video = await contract.videos(videoId);
     console.log(video);
-    let videosCount = await contract.videoCount();
+    let videosCount = await contract.currentVideoId();
     console.log(String(videosCount));
     let videos = [];
     for (var i = videosCount; i >= 1; i--) {

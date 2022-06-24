@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Header } from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
+import { ethers } from "ethers";
 import { create } from "ipfs-http-client";
 import { BiCloud, BiMusic, BiPlus } from "react-icons/bi";
 import toast from "react-hot-toast";
@@ -113,7 +115,7 @@ export default function Upload() {
 
     // Show successfully alert
 
-    await contract.uploadVideo(
+    await contract.addVideo(
       video,
       title,
       description,
