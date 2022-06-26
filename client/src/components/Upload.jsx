@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
-import { ethers } from "ethers";
+import { Header } from "./Header";
+import Sidebar from "./Sidebar";
 import { create } from "ipfs-http-client";
-import { BiCloud, BiMusic, BiPlus } from "react-icons/bi";
+import { BiCloud, BiPlus } from "react-icons/bi";
 import toast from "react-hot-toast";
 import getContract from "../utils/getContract";
-import Toggle from "react-toggle";
 import "react-toggle/style.css"; // for ES6 modules
 
 export default function Upload() {

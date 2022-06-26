@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
-import { Header } from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import VideoComponent from "../components/VideoComponent";
-import Video from "../components/Video";
-import getContract from "../utils/getContract";
+import { Header } from "./Header";
+import Sidebar from "./Sidebar";
+import VideoComponent from "./VideoComponent";
+import Video from "./Video";
 import { Link, useLocation } from "react-router-dom";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
 
@@ -22,16 +21,6 @@ export default function VideoPage(props) {
   }, [state]);
 
   const client = useApolloClient();
-  const getUrlVars = () => {
-    var vars = {};
-    var parts = window.location.href.replace(
-      /[?&]+([^=&]+)=([^&]*)/gi,
-      function (m, key, value) {
-        vars[key] = value;
-      }
-    );
-    return vars;
-  };
 
   const getRelatedVideos = (IdToExclude) => {
     client
@@ -49,7 +38,6 @@ export default function VideoPage(props) {
         fetchPolicy: "network-only"
       })
       .then(({ data }) => {
-        console.log("videos", data.videos);
         setRelatedVideos(data.videos);
       })
       .catch((err) => {

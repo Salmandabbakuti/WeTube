@@ -3,7 +3,6 @@ import { BiCheck } from "react-icons/bi";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 
 export default function ChannelInfoInVIdeo({ video }) {
-  console.log("ChannelInfoInVIdeo", video);
   return (
     <div>
       <div className="flex mt-5 flex-row items-center ">

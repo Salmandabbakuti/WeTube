@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  AiOutlineBook,
   AiOutlineBulb,
   AiOutlineCompass,
   AiOutlineDribbble,
@@ -8,17 +7,13 @@ import {
   AiOutlineMenu,
   AiOutlinePlayCircle,
 } from "react-icons/ai";
-import { BiNews } from "react-icons/bi";
-import { IoGameControllerOutline, IoNewspaperOutline } from "react-icons/io5";
-import { local } from "web3modal";
-
+import { IoGameControllerOutline } from "react-icons/io5";
 import { Colors } from "../constants/colors";
 
 export default function Sidebar({ updateCategory }) {
   const [active, setActive] = useState("All");
 
   let mode = localStorage.getItem("color-theme");
-  console.log("mode", mode);
   let color = mode === "dark" ? "#4B5563" : "#000";
 
   let categories = [
