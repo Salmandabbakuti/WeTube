@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { useApolloClient } from "@apollo/client";
 import { Header } from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import VideoComponent from "../components/VideoComponent";
 import Video from "../components/Video";
 import getContract from "../utils/getContract";
-import { Link } from "react-router-dom";
-export default function VideoPage() {
+import { Link, useLocation } from "react-router-dom";
+import { GET_VIDEOS } from "../constants/graphqlQueries";
+
+export default function VideoPage(props) {
   const [video, setVideo] = useState(null);
   const [relatedVideos, setRelatedVideos] = useState([]);
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state) {
+      const { id } = state;
+      setVideo(state);
+      getRelatedVideos(id);
+    }
+  }, [state]);
+
+  const client = useApolloClient();
   const getUrlVars = () => {
     var vars = {};
     var parts = window.location.href.replace(
@@ -19,27 +33,29 @@ export default function VideoPage() {
     return vars;
   };
 
-  const getBlockChainData = async () => {
-    let contract = await getContract();
-    let videoId = getUrlVars()["id"];
-    console.log(String(videoId));
-    let video = await contract.videos(videoId);
-    console.log(video);
-    let videosCount = await contract.currentVideoId();
-    console.log(String(videosCount));
-    let videos = [];
-    for (var i = videosCount; i >= 1; i--) {
-      let video = await contract.videos(i);
-      videos.push(video);
-    }
-
-    setRelatedVideos(videos);
-    setVideo(video);
+  const getRelatedVideos = (IdToExclude) => {
+    client
+      .query({
+        query: GET_VIDEOS,
+        variables: {
+          first: 20,
+          skip: 0,
+          orderBy: "createdAt",
+          orderDirection: "desc",
+          where: {
+            id_not: IdToExclude
+          }
+        },
+        fetchPolicy: "network-only"
+      })
+      .then(({ data }) => {
+        console.log("videos", data.videos);
+        setRelatedVideos(data.videos);
+      })
+      .catch((err) => {
+        alert("Something went wrong. please try again.!", err.message);
+      });
   };
-
-  useEffect(() => {
-    getBlockChainData();
-  }, []);
 
   return (
     <div className="w-full  flex flex-row">
@@ -57,10 +73,9 @@ export default function VideoPage() {
               </h4>
               {relatedVideos.map((video) => (
                 <Link
-                  onClick={() => {
-                    setVideo(video);
-                  }}
                   to={`/video?id=${video.id}`}
+                  state={video}
+                  key={video.id}
                 >
                   <Video video={video} horizontal={true} />
                 </Link>

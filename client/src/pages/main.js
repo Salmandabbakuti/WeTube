@@ -1,64 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useApolloClient } from "@apollo/client";
 import { Header } from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import Video from "../components/Video";
 import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
 import { ethers } from "ethers";
 import getContract from "../utils/getContract";
+import { GET_VIDEOS } from "../constants/graphqlQueries";
 
 export default function Main() {
   const [videos, setVideos] = useState([]);
   const [AllVideos, setAllVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingArray, setLoadingArray] = useState(10);
+  const [titleSearchInput, setTitleSearchInput] = useState("");
+  const [categorySearchInput, setCategorySearchInput] = useState("");
 
-  const getBlockChainData = async () => {
+  const client = useApolloClient();
+
+  const getVideos = async () => {
     setLoading(true);
-    let contract = await getContract();
-    let videosCount = await contract.currentVideoId();
-    console.log(String(videosCount));
-    let videos = [];
-    for (var i = videosCount; i >= 1; i--) {
-      let video = await contract.videos(i);
-      videos.push(video);
-    }
-    setAllVideos(videos);
-    setVideos(videos);
-    setLoading(false);
-  };
-
-  const filterData = (e) => {
-    let search = e;
-    let filteredVideos = AllVideos.filter((video) => {
-      return video.title.toLowerCase().includes(search.toLowerCase());
-    });
-    setVideos(filteredVideos);
-  };
-
-  const filterBasedOnCategory = (category) => {
-    console.log(category);
-    if (category === "All") {
-      setVideos(AllVideos);
-    } else {
-      let filteredVideos = AllVideos.filter((video) => {
-        return video.category.toLowerCase().includes(category.toLowerCase());
+    client
+      .query({
+        query: GET_VIDEOS,
+        variables: {
+          first: 200,
+          skip: 0,
+          orderBy: "createdAt",
+          orderDirection: "desc",
+          where: {
+            ...titleSearchInput && { title_contains_nocase: titleSearchInput },
+            ...categorySearchInput && { category_contains_nocase: categorySearchInput },
+          }
+        },
+        fetchPolicy: "network-only"
+      })
+      .then(({ data }) => {
+        setLoading(false);
+        console.log("videos", data.videos);
+        setAllVideos(videos);
+        setVideos(data.videos);
+      })
+      .catch((err) => {
+        setLoading(false);
+        alert("Something went wrong. please try again.!", err.message);
       });
-      setVideos(filteredVideos);
-    }
   };
 
   useEffect(() => {
-    getBlockChainData();
-  }, []);
+    getVideos();
+  }, [titleSearchInput, categorySearchInput]);
   return (
     <div className="w-full   flex flex-row">
-      <Sidebar updateCategory={(category) => filterBasedOnCategory(category)} />
+      <Sidebar updateCategory={(category) => setCategorySearchInput(category)} />
       <div className="flex-1 h-screen flex flex-col">
-        <Header search={(text) => filterData(text)} />
+        <Header search={(text) => setTitleSearchInput(text)} />
         <div className="flex flex-row flex-wrap">
           {videos.map((video) => (
-            <Link to={`/video?id=${video.id}`}>
+            <Link to={`/video?id=${video.id}`} state={video} key={video.id} >
               <div className="w-80">
                 <Video video={video} />
               </div>
