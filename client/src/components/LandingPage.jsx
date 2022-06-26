@@ -1,7 +1,6 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function HeroHome() {
+export default function LandingPage() {
   let navigate = useNavigate();
 
   const connectWallet = async () => {
@@ -109,5 +108,3 @@ function HeroHome() {
     </>
   );
 }
-
-export default HeroHome;

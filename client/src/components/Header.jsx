@@ -1,11 +1,11 @@
 import React from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { Link } from "react-router-dom";
 import Toggle from "../utils/ThemeToggle";
 import Logo from "../assets/logo.svg";
 import { Jazzicon } from "@ukstv/jazzicon-react";
+
 export const Header = ({ search }) => {
   let address = localStorage.getItem("walletAddress");
   return (

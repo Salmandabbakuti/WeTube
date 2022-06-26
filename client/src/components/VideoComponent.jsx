@@ -1,9 +1,8 @@
 import React from "react";
 import VideoPlayer from "./VideoPlayer";
 import ChannelInfoInVideo from "./ChannelInfoInVideo";
-import Video from "./Video";
+
 export default function VIdeoComponent({ video }) {
-  console.log("Main VIdeo", video.title);
   return (
     <div>
       <VideoPlayer hash={video.hash} />

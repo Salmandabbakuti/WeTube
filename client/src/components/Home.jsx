@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
-import { Header } from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import Video from "../components/Video";
-import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
-import { ethers } from "ethers";
-import getContract from "../utils/getContract";
+import { Header } from "./Header";
+import Sidebar from "./Sidebar";
+import Video from "./Video";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
+import Loader from "./Loader";
 
-export default function Main() {
+export default function Home() {
   const [videos, setVideos] = useState([]);
-  const [AllVideos, setAllVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingArray, setLoadingArray] = useState(10);
   const [titleSearchInput, setTitleSearchInput] = useState("");
@@ -38,8 +35,6 @@ export default function Main() {
       })
       .then(({ data }) => {
         setLoading(false);
-        console.log("videos", data.videos);
-        setAllVideos(videos);
         setVideos(data.videos);
       })
       .catch((err) => {
@@ -51,6 +46,7 @@ export default function Main() {
   useEffect(() => {
     getVideos();
   }, [titleSearchInput, categorySearchInput]);
+
   return (
     <div className="w-full   flex flex-row">
       <Sidebar updateCategory={(category) => setCategorySearchInput(category)} />
@@ -69,8 +65,8 @@ export default function Main() {
             <div className="flex-1 flex flex-row flex-wrap">
               {Array(loadingArray)
                 .fill(0)
-                .map((_, index) => (
-                  <div className="w-80" key={index}>
+                .map((_, i) => (
+                  <div className="w-80" key={i}>
                     <Loader />
                   </div>
                 ))}
@@ -81,13 +77,3 @@ export default function Main() {
     </div>
   );
 }
-
-const Loader = () => {
-  return (
-    <div className="flex flex-col m-5 animate-pulse">
-      <div className="w-full bg-gray-300 dark:bg-borderGray h-40 rounded-lg "></div>
-      <div className="w-50 mt-3 bg-gray-300 dark:bg-borderGray h-6 rounded-md "></div>
-      <div className="w-24 bg-gray-300 h-3 dark:bg-borderGray mt-3 rounded-md "></div>
-    </div>
-  );
-};

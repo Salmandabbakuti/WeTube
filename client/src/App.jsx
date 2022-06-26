@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Main from "./pages/main";
-import Upload from "./pages/Upload";
-import Hero from "./pages/Hero";
-import VideoPage from "./pages/Video";
+import Home from "./components/Home";
+import Upload from "./components/Upload";
+import LandingPage from "./components/LandingPage";
+import VideoPage from "./components/VideoPage";
 export default function App() {
   const [UserWallet, setUserWallet] = useState(null);
 
@@ -17,10 +17,6 @@ export default function App() {
         alert("Get MetaMask!");
         return;
       }
-
-      // Change network to ropsten
-      await ethereum.enable();
-
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -45,15 +41,15 @@ export default function App() {
         window.location.reload();
       });
       window.ethereum.on("accountsChanged", () => {
-        checkedWallet();
+        window.location.reload();
       });
     }
   }, []);
 
   return (
     <Routes>
-      <Route path="/app" element={<Main userWallet={UserWallet} />} />
-      <Route path="/" exact element={<Hero />} />
+      <Route path="/app" element={<Home userWallet={UserWallet} />} />
+      <Route path="/" exact element={<LandingPage />} />
       <Route path="/upload" element={<Upload />} />
       <Route path="/video" element={<VideoPage />} />
     </Routes>
