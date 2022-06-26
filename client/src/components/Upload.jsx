@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
 import { create } from "ipfs-http-client";
@@ -8,7 +7,7 @@ import toast from "react-hot-toast";
 import getContract from "../utils/getContract";
 import "react-toggle/style.css"; // for ES6 modules
 
-export default function Upload() {
+export default function Upload(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -21,13 +20,10 @@ export default function Upload() {
   const thumbnailRef = useRef();
   const videoRef = useRef();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const address = localStorage.getItem("walletAddress");
     if (address && address.startsWith("0x000000000000")) {
-      console.log('connect your wallet to continue');
-      navigate("/");
+      props.history.push("/");
     }
   }, []);
 

@@ -7,7 +7,7 @@ import Video from "./Video";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
 import Loader from "./Loader";
 
-export default function Home() {
+export default function Videos() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingArray, setLoadingArray] = useState(10);
@@ -54,7 +54,7 @@ export default function Home() {
         <Header search={(text) => setTitleSearchInput(text)} />
         <div className="flex flex-row flex-wrap">
           {videos.map((video) => (
-            <Link to={`/video?id=${video.id}`} state={video} key={video.id} >
+            <Link to={{ pathname: `/video/${video.id}`, state: video }} key={video.id} >
               <div className="w-80">
                 <Video video={video} />
               </div>

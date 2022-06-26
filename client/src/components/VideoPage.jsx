@@ -61,8 +61,7 @@ export default function VideoPage(props) {
               </h4>
               {relatedVideos.map((video) => (
                 <Link
-                  to={`/video?id=${video.id}`}
-                  state={video}
+                  to={{ pathname: `/video/${video.id}`, state: video }}
                   key={video.id}
                 >
                   <Video video={video} horizontal={true} />
