@@ -84,18 +84,18 @@ export default function LandingPage(props) {
                   their privacy.
                 </p>
                 <button
-                  className="items-center  bg-white rounded-full font-medium  p-4 shadow-lg"
+                  className="items-center bg-white rounded-full font-medium p-4 shadow-lg"
                   onClick={() => {
                     connectWallet();
                   }}
                 >
-                  <span className="">Connect your wallet to continue</span>
+                  Connect Wallet
                 </button>
                 <button
-                  className="items-center  bg-white rounded-full font-medium  p-4 shadow-lg"
+                  className="items-center bg-white rounded-full font-medium p-4 shadow-lg"
                   onClick={continueWithoutSigningIn}
                 >
-                  <span className="">Guest Mode</span>
+                  Guest Mode
                 </button>
               </div>
             </div>
