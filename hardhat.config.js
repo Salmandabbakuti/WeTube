@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-etherscan");
 require('dotenv').config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -42,6 +43,10 @@ module.exports = {
       url: process.env.POLYGON_MAINNET_RPC_URL,
       accounts
     }
+  },
+  etherscan: {
+    // API key for Polygonscan
+    apiKey: process.env.POLYGON_SCAN_API_KEY
   },
   solidity: {
     version: "0.8.13",

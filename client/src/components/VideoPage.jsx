@@ -3,7 +3,7 @@ import { useApolloClient } from "@apollo/client";
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
 import VideoComponent from "./VideoComponent";
-import Video from "./Video";
+import VideoCard from "./VideoCard";
 import { Link, useLocation } from "react-router-dom";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
 
@@ -64,7 +64,7 @@ export default function VideoPage(props) {
                   to={{ pathname: `/video/${video.id}`, state: video }}
                   key={video.id}
                 >
-                  <Video video={video} horizontal={true} />
+                  <VideoCard video={video} horizontal={true} />
                 </Link>
               ))}
             </div>

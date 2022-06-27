@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
-import Video from "./Video";
+import VideoCard from "./VideoCard";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
 import Loader from "./Loader";
 
 export default function Videos() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingArray, setLoadingArray] = useState(10);
   const [titleSearchInput, setTitleSearchInput] = useState("");
   const [categorySearchInput, setCategorySearchInput] = useState("");
 
@@ -56,14 +55,14 @@ export default function Videos() {
           {videos.map((video) => (
             <Link to={{ pathname: `/video/${video.id}`, state: video }} key={video.id} >
               <div className="w-80">
-                <Video video={video} />
+                <VideoCard video={video} />
               </div>
             </Link>
           ))}
 
           {loading && (
             <div className="flex-1 flex flex-row flex-wrap">
-              {Array(loadingArray)
+              {Array(10)
                 .fill(0)
                 .map((_, i) => (
                   <div className="w-80" key={i}>

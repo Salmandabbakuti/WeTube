@@ -2,7 +2,7 @@ import React from "react";
 import { BiCheck } from "react-icons/bi";
 import moment from "moment";
 
-export default function Video({ horizontal, video }) {
+export default function VideoCard({ horizontal, video }) {
   return (
     <div
       className={`${horizontal
@@ -29,7 +29,7 @@ export default function Video({ horizontal, video }) {
             moment(video.createdAt * 1000).fromNow()}
         </p>
         <p className="text-sm flex items-center text-textSubTitle mt-1">
-          {video?.author?.slice(0, 9)}...{" "}
+          {video?.owner?.slice(0, 9)}...{" "}
           <BiCheck size="20px" color="green" className="ml-1" />
         </p>
       </div>

@@ -12,6 +12,7 @@ POLYGON_MUMBAI_RPC_URL=
 POLYGON_MAINNET_RPC_URL=
 ROPSTEN_RPC_URL=
 RINKEBY_RPC_URL=
+POLYGON_SCAN_API_KEY=
 ```
 
 1. Compile and deploy contract
@@ -24,10 +25,12 @@ RINKEBY_RPC_URL=
 8. Authorize graph cli for deployment using token
 9. Deploy subgraph
 
-```
+```shell
 yarn install
 npx hardhat compile
 npx hardhat deploy --network polygonMumbai
+npx hardhat verify --network polygonMumbai <Deployed contract address> "<constructor1>" "<constructor2>" # verify contract
+
 yarn codegen
 
 yarn build

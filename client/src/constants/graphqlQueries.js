@@ -16,15 +16,13 @@ export const GET_VIDEOS = gql`
         where: $where
       ) {
         id
-        hash
         title
         description
         location
         category
         thumbnailHash
-        isAudio
-        date
-        author
+        videoHash
+        owner
         createdAt
       }
     }
