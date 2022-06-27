@@ -1,4 +1,3 @@
-import ContractAbi from "../artifacts/contracts/OurTube.sol/OurTube.json";
 import { ethers } from "ethers";
 
 const abi = [
