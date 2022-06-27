@@ -11,9 +11,7 @@ export default function VideoComponent({ video }) {
         <div>
           <h3 className="text-2xl dark:text-white">{video.title} </h3>
           <p className="text-gray-500 mt-1">
-            {video.category} •{" "}
-            {new Date(video.createdAt * 1000).toLocaleString("en-IN")} •{" "}
-            {video.location}
+            {video.category + " • " + new Date(video.createdAt * 1000).toLocaleString("en-IN") + " • " + video.location}
           </p>
         </div>
       </div>
@@ -25,7 +23,7 @@ export default function VideoComponent({ video }) {
 
           <div className="ml-3 flex flex-col">
             <p className="text-md flex items-center text-black dark:text-white mt-1">
-              {video.owner.slice(0, 13)}...{" "}
+              {video.owner.slice(0, 9) + "..." + video.owner.slice(-5)}
               <BiCheck size="20px" className="ml-1 fill-gray" />
             </p>
             <p className="text-sm flex items-center text-textSubTitle ">

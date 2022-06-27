@@ -11,10 +11,14 @@ export default function Upload(props) {
   const [thumbnail, setThumbnail] = useState("");
   const [video, setVideo] = useState("");
   const [isAudio, setIsAudio] = useState(false);
-  const [formInput, setFormInput] = useState({});
+  const [formInput, setFormInput] = useState({ category: 'Entertainment' });
   const [loading, setLoading] = useState(false);
 
-  const ipfsClient = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+  const ipfsClient = create({
+    host: "ipfs.infura.io",
+    port: 5001,
+    protocol: "https"
+  });
   const thumbnailRef = useRef();
   const videoRef = useRef();
 
@@ -25,39 +29,42 @@ export default function Upload(props) {
     }
   }, []);
 
-  const handleInputChange = (e) => setFormInput({ ...formInput, [e.target.name]: e.target.value });
+  const handleInputChange = (e) =>
+    setFormInput({ ...formInput, [e.target.name]: e.target.value });
 
   const handleAddVideo = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
-      console.log("formInput:", formInput);
-      // const { title, description, category, location, thumbnailHash, videoHash, isAudio } = formInput;
-      if (!['title', 'description', 'category', 'location'].every((key) => formInput[key])) {
+      if (
+        !["title", "description", "category", "location"].every(
+          (key) => formInput[key]
+        )
+      ) {
         // alert("Please fill out all fields");
         return toast.error("Please fill all the fields", {
           style: {
             borderRadius: "10px",
             background: "#333",
-            color: "#fff",
-          },
+            color: "#fff"
+          }
         });
-      };
+      }
 
       if (!thumbnail || !video) {
         return toast.error("Please add video and thumbnail.!", {
           style: {
             borderRadius: "10px",
             background: "#333",
-            color: "#fff",
-          },
+            color: "#fff"
+          }
         });
       }
-      const { path: thumbnailHash } = await ipfsClient.add(thumbnailRef.current.files[0]);
-      const { path: videoHash } = await ipfsClient.add(videoRef.current.files[0]);
+      setLoading(true);
+      const { path: thumbnailHash } = await ipfsClient.add(thumbnail);
+      const { path: videoHash } = await ipfsClient.add(video);
       console.log("Adding video to contract");
 
-      let contract = await getContract();
+      let contract = getContract();
 
       const tx = await contract.addVideo(
         formInput.title,
@@ -72,17 +79,17 @@ export default function Upload(props) {
       await tx.wait();
       setLoading(false);
       toast.success("Video added successfully", {
+        position: "top-right",
         style: {
           borderRadius: "10px",
           background: "#333",
-          color: "#fff",
-        },
+          color: "#fff"
+        }
       });
+      props.history.push("/videos");
     } catch (error) {
       setLoading(false);
-      console.log("Error uploading file: ", error);
-    } finally {
-      setLoading(false);
+      console.log("Error uploading video: ", error);
       props.history.goBack();
     }
   };
@@ -96,13 +103,15 @@ export default function Upload(props) {
           <div className="flex items-center">
             <button
               className="bg-transparent  dark:text-[#9CA3AF] py-2 px-6 border rounded-lg  border-gray-600  mr-6"
+              disabled={loading}
               onClick={props.history.goBack}
             >
               Discard
             </button>
             <button
-              onClick={handleAddVideo}
               className="bg-blue-500 hover:bg-blue-700 text-white  py-2  rounded-lg flex px-4 justify-between flex-row items-center"
+              onClick={handleAddVideo}
+              disabled={loading}
             >
               <BiCloud />
               <p className="ml-2">Upload</p>
@@ -156,11 +165,11 @@ export default function Upload(props) {
                   onChange={handleInputChange}
                   className=" rounded-md dark:text-white mt-2  h-12 p-2 dark:border-gray-600 border border-borderWhiteGray bg-white dark:bg-backgroundBlack dark:text-[#9CA3AF] focus:outline-none"
                 >
+                  <option>Entertainment</option>
                   <option>Music</option>
                   <option>Sports</option>
                   <option>Gaming</option>
                   <option>News</option>
-                  <option>Entertainment</option>
                   <option>Education</option>
                   <option>Science & Technology</option>
                   <option>Travel</option>
@@ -250,4 +259,4 @@ export default function Upload(props) {
       </div>
     </div>
   );
-};
+}

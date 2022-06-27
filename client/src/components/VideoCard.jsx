@@ -24,12 +24,10 @@ export default function VideoCard({ horizontal, video }) {
           {video.title}
         </h4>
         <p className="text-sm flex items-center text-textSubTitle mt-1">
-          {video.category +
-            " • " +
-            moment(video.createdAt * 1000).fromNow()}
+          {video.category + " • " + moment(video.createdAt * 1000).fromNow()}
         </p>
         <p className="text-sm flex items-center text-textSubTitle mt-1">
-          {video?.owner?.slice(0, 9)}...{" "}
+          {video.owner.slice(0, 9) + "..." + video.owner.slice(-5)}
           <BiCheck size="20px" color="green" className="ml-1" />
         </p>
       </div>

@@ -14,6 +14,5 @@ export default function getContract() {
     abi,
     signer
   );
-  console.log(contract);
   return contract;
 }
