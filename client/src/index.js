@@ -5,27 +5,24 @@ import "./index.css";
 import App from "./App";
 import { ThemeProvider } from "./utils/ThemeContext";
 import Background from "./components/Background";
-import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/salmandabbakuti/ourtube",
+  uri: "https://api.thegraph.com/subgraphs/name/salmandabbakuti/wetube-subgraph",
   cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
-  <Background>
-    <React.StrictMode>
+  <React.StrictMode>
+    <Background>
       <ApolloProvider client={client}>
-        <BrowserRouter>
-          <ThemeProvider>
-            <Toaster />
-            <App />
-          </ThemeProvider>
-        </BrowserRouter>
+        <ThemeProvider>
+          <Toaster />
+          <App />
+        </ThemeProvider>
       </ApolloProvider>
-    </React.StrictMode>
-  </Background>,
+    </Background >
+  </React.StrictMode>,
   document.getElementById("root")
 );
 

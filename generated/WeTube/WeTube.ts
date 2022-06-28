@@ -51,12 +51,12 @@ export class VideoAdded__Params {
     return this._event.parameters[6].value.toString();
   }
 
-  get createdAt(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
+  get owner(): Address {
+    return this._event.parameters[7].value.toAddress();
   }
 
-  get owner(): Address {
-    return this._event.parameters[8].value.toAddress();
+  get createdAt(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
   }
 }
 
@@ -68,8 +68,8 @@ export class WeTube__videosResult {
   value4: string;
   value5: string;
   value6: string;
-  value7: BigInt;
-  value8: Address;
+  value7: Address;
+  value8: BigInt;
 
   constructor(
     value0: BigInt,
@@ -79,8 +79,8 @@ export class WeTube__videosResult {
     value4: string,
     value5: string,
     value6: string,
-    value7: BigInt,
-    value8: Address
+    value7: Address,
+    value8: BigInt
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -102,8 +102,8 @@ export class WeTube__videosResult {
     map.set("value4", ethereum.Value.fromString(this.value4));
     map.set("value5", ethereum.Value.fromString(this.value5));
     map.set("value6", ethereum.Value.fromString(this.value6));
-    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
-    map.set("value8", ethereum.Value.fromAddress(this.value8));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
+    map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
     return map;
   }
 }
@@ -135,7 +135,7 @@ export class WeTube extends ethereum.SmartContract {
   videos(param0: BigInt): WeTube__videosResult {
     let result = super.call(
       "videos",
-      "videos(uint256):(uint256,string,string,string,string,string,string,uint256,address)",
+      "videos(uint256):(uint256,string,string,string,string,string,string,address,uint256)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -147,15 +147,15 @@ export class WeTube extends ethereum.SmartContract {
       result[4].toString(),
       result[5].toString(),
       result[6].toString(),
-      result[7].toBigInt(),
-      result[8].toAddress()
+      result[7].toAddress(),
+      result[8].toBigInt()
     );
   }
 
   try_videos(param0: BigInt): ethereum.CallResult<WeTube__videosResult> {
     let result = super.tryCall(
       "videos",
-      "videos(uint256):(uint256,string,string,string,string,string,string,uint256,address)",
+      "videos(uint256):(uint256,string,string,string,string,string,string,address,uint256)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -171,8 +171,8 @@ export class WeTube extends ethereum.SmartContract {
         value[4].toString(),
         value[5].toString(),
         value[6].toString(),
-        value[7].toBigInt(),
-        value[8].toAddress()
+        value[7].toAddress(),
+        value[8].toBigInt()
       )
     );
   }
