@@ -15,6 +15,12 @@ export class Video extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
+
+    this.set("hash", Value.fromString(""));
+    this.set("title", Value.fromString(""));
+    this.set("thumbnailHash", Value.fromString(""));
+    this.set("channel", Value.fromString(""));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -40,6 +46,15 @@ export class Video extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
   }
 
   get title(): string {
@@ -68,23 +83,6 @@ export class Video extends Entity {
     }
   }
 
-  get category(): string | null {
-    let value = this.get("category");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set category(value: string | null) {
-    if (!value) {
-      this.unset("category");
-    } else {
-      this.set("category", Value.fromString(<string>value));
-    }
-  }
-
   get location(): string | null {
     let value = this.get("location");
     if (!value || value.kind == ValueKind.NULL) {
@@ -102,6 +100,23 @@ export class Video extends Entity {
     }
   }
 
+  get category(): string | null {
+    let value = this.get("category");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set category(value: string | null) {
+    if (!value) {
+      this.unset("category");
+    } else {
+      this.set("category", Value.fromString(<string>value));
+    }
+  }
+
   get thumbnailHash(): string {
     let value = this.get("thumbnailHash");
     return value!.toString();
@@ -111,13 +126,83 @@ export class Video extends Entity {
     this.set("thumbnailHash", Value.fromString(value));
   }
 
-  get videoHash(): string {
-    let value = this.get("videoHash");
+  get isAudio(): boolean {
+    let value = this.get("isAudio");
+    return value!.toBoolean();
+  }
+
+  set isAudio(value: boolean) {
+    this.set("isAudio", Value.fromBoolean(value));
+  }
+
+  get channel(): string {
+    let value = this.get("channel");
     return value!.toString();
   }
 
-  set videoHash(value: string) {
-    this.set("videoHash", Value.fromString(value));
+  set channel(value: string) {
+    this.set("channel", Value.fromString(value));
+  }
+
+  get date(): string | null {
+    let value = this.get("date");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set date(value: string | null) {
+    if (!value) {
+      this.unset("date");
+    } else {
+      this.set("date", Value.fromString(<string>value));
+    }
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+}
+
+export class Channel extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("owner", Value.fromBytes(Bytes.empty()));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Channel entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Channel must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Channel", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Channel | null {
+    return changetype<Channel | null>(store.get("Channel", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get owner(): Bytes {
@@ -127,6 +212,15 @@ export class Video extends Entity {
 
   set owner(value: Bytes) {
     this.set("owner", Value.fromBytes(value));
+  }
+
+  get videos(): Array<string> {
+    let value = this.get("videos");
+    return value!.toStringArray();
+  }
+
+  set videos(value: Array<string>) {
+    this.set("videos", Value.fromStringArray(value));
   }
 
   get createdAt(): BigInt {

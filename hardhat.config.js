@@ -6,7 +6,7 @@ require('dotenv').config();
 task("hello", "Prints Hello World", () => console.log("Hello World!"));
 
 task("deploy", "Deploys Contract", async () => {
-  const contractFactory = await ethers.getContractFactory("WeTube");
+  const contractFactory = await ethers.getContractFactory("OurTube");
   const contract = await contractFactory.deploy();
   await contract.deployed();
   console.log("contract deployed to:", contract.address);

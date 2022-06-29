@@ -1,11 +1,20 @@
 type Video @entity {
   id: ID!
+  hash: String! # string
   title: String! # string
   description: String # string
-  category: String # string
   location: String # string
+  category: String # string
   thumbnailHash: String! # string
-  videoHash: String! # string
+  isAudio: Boolean # bool
+  channel: Channel! # address
+  date: String # string
+  createdAt: BigInt! # timestamp
+}
+
+type Channel @entity {
+  id: ID!
   owner: Bytes! # address
+  videos: [Video!]! @derivedFrom(field: "channel")
   createdAt: BigInt! # uint256
 }

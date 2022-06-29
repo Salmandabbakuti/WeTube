@@ -1,5 +1,16 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_greeting",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -7,6 +18,12 @@
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "hash",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -23,13 +40,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "category",
+        "name": "location",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "location",
+        "name": "category",
         "type": "string"
       },
       {
@@ -40,28 +57,46 @@
       },
       {
         "indexed": false,
+        "internalType": "bool",
+        "name": "isAudio",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
         "internalType": "string",
-        "name": "videoHash",
+        "name": "date",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "owner",
+        "name": "author",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "createdAt",
-        "type": "uint256"
       }
     ],
-    "name": "VideoAdded",
+    "name": "VideoUploaded",
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
+      {
+        "internalType": "string",
+        "name": "_videoHash",
+        "type": "string"
+      },
       {
         "internalType": "string",
         "name": "_title",
@@ -74,12 +109,12 @@
       },
       {
         "internalType": "string",
-        "name": "_category",
+        "name": "_location",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "_location",
+        "name": "_category",
         "type": "string"
       },
       {
@@ -88,19 +123,24 @@
         "type": "string"
       },
       {
+        "internalType": "bool",
+        "name": "_isAudio",
+        "type": "bool"
+      },
+      {
         "internalType": "string",
-        "name": "_videoHash",
+        "name": "_date",
         "type": "string"
       }
     ],
-    "name": "addVideo",
+    "name": "uploadVideo",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "currentVideoId",
+    "name": "videoCount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -128,6 +168,11 @@
       },
       {
         "internalType": "string",
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
         "name": "title",
         "type": "string"
       },
@@ -138,12 +183,12 @@
       },
       {
         "internalType": "string",
-        "name": "category",
+        "name": "location",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "location",
+        "name": "category",
         "type": "string"
       },
       {
@@ -152,19 +197,19 @@
         "type": "string"
       },
       {
+        "internalType": "bool",
+        "name": "isAudio",
+        "type": "bool"
+      },
+      {
         "internalType": "string",
-        "name": "videoHash",
+        "name": "date",
         "type": "string"
       },
       {
         "internalType": "address",
-        "name": "owner",
+        "name": "author",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "createdAt",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
