@@ -21,7 +21,8 @@ export const GET_VIDEOS = gql`
       location
       category
       thumbnailHash
-      videoHash
+      hash
+      isAudio
       channel {
         id
         owner
