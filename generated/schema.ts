@@ -19,7 +19,7 @@ export class Video extends Entity {
     this.set("title", Value.fromString(""));
     this.set("thumbnailHash", Value.fromString(""));
     this.set("videoHash", Value.fromString(""));
-    this.set("owner", Value.fromBytes(Bytes.empty()));
+    this.set("channel", Value.fromString(""));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -126,6 +126,59 @@ export class Video extends Entity {
     this.set("videoHash", Value.fromString(value));
   }
 
+  get channel(): string {
+    let value = this.get("channel");
+    return value!.toString();
+  }
+
+  set channel(value: string) {
+    this.set("channel", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+}
+
+export class Channel extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("owner", Value.fromBytes(Bytes.empty()));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Channel entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Channel must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Channel", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Channel | null {
+    return changetype<Channel | null>(store.get("Channel", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
   get owner(): Bytes {
     let value = this.get("owner");
     return value!.toBytes();
@@ -133,6 +186,15 @@ export class Video extends Entity {
 
   set owner(value: Bytes) {
     this.set("owner", Value.fromBytes(value));
+  }
+
+  get videos(): Array<string> {
+    let value = this.get("videos");
+    return value!.toStringArray();
+  }
+
+  set videos(value: Array<string>) {
+    this.set("videos", Value.fromStringArray(value));
   }
 
   get createdAt(): BigInt {

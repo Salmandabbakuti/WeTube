@@ -6,6 +6,13 @@ type Video @entity {
   location: String # string
   thumbnailHash: String! # string
   videoHash: String! # string
+  channel: Channel! # address
+  createdAt: BigInt! # uint256
+}
+
+type Channel @entity {
+  id: ID!
   owner: Bytes! # address
+  videos: [Video!]! @derivedFrom(field: "channel")
   createdAt: BigInt! # uint256
 }
