@@ -18,16 +18,16 @@ export default function VideoComponent({ video }) {
       <div>
         <div className="flex mt-5 flex-row items-center ">
           <div className="w-12">
-            <Jazzicon address={video.owner} size={12} />
+            <Jazzicon address={video?.channel?.id} size={12} />
           </div>
 
           <div className="ml-3 flex flex-col">
             <p className="text-md flex items-center text-black dark:text-white mt-1">
-              {video.owner.slice(0, 9) + "..." + video.owner.slice(-5)}
+              {video?.channel?.id.slice(0, 9) + "..." + video?.channel?.id.slice(-5)}
               <BiCheck size="20px" className="ml-1 fill-gray" />
             </p>
             <p className="text-sm flex items-center text-textSubTitle ">
-              Video by {video.owner}
+              Video by {video?.channel?.owner}
             </p>
           </div>
         </div>
