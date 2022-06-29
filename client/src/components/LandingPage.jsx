@@ -1,7 +1,4 @@
-import { useNavigate } from "react-router-dom";
-
-export default function LandingPage() {
-  let navigate = useNavigate();
+export default function LandingPage(props) {
 
   const connectWallet = async () => {
     try {
@@ -17,7 +14,7 @@ export default function LandingPage() {
       });
       console.log("Connected", accounts[0]);
       localStorage.setItem("walletAddress", accounts[0]);
-      navigate("/app");
+      props.history.push("/videos");
     } catch (error) {
       console.log(error);
     }
@@ -25,7 +22,7 @@ export default function LandingPage() {
 
   const continueWithoutSigningIn = () => {
     localStorage.setItem("walletAddress", "0x0000000000000000000000000000000000000000");
-    navigate("/app");
+    props.history.push("/videos");
   };
 
   return (
@@ -87,18 +84,18 @@ export default function LandingPage() {
                   their privacy.
                 </p>
                 <button
-                  className="items-center  bg-white rounded-full font-medium  p-4 shadow-lg"
+                  className="items-center bg-white rounded-full font-medium p-4 shadow-lg"
                   onClick={() => {
                     connectWallet();
                   }}
                 >
-                  <span className="">Connect your wallet to continue</span>
+                  Connect Wallet
                 </button>
                 <button
-                  className="items-center  bg-white rounded-full font-medium  p-4 shadow-lg"
+                  className="items-center bg-white rounded-full font-medium p-4 shadow-lg"
                   onClick={continueWithoutSigningIn}
                 >
-                  <span className="">Guest Mode</span>
+                  Guest Mode
                 </button>
               </div>
             </div>

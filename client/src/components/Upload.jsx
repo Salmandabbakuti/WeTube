@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
 import { create } from "ipfs-http-client";
@@ -8,136 +7,91 @@ import toast from "react-hot-toast";
 import getContract from "../utils/getContract";
 import "react-toggle/style.css"; // for ES6 modules
 
-export default function Upload() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
+export default function Upload(props) {
   const [thumbnail, setThumbnail] = useState("");
   const [video, setVideo] = useState("");
   const [isAudio, setIsAudio] = useState(false);
+  const [formInput, setFormInput] = useState({ category: 'Entertainment' });
+  const [loading, setLoading] = useState(false);
 
-  const client = create("https://ipfs.infura.io:5001/api/v0");
+  const ipfsClient = create({
+    host: "ipfs.infura.io",
+    port: 5001,
+    protocol: "https"
+  });
   const thumbnailRef = useRef();
   const videoRef = useRef();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const address = localStorage.getItem("walletAddress");
     if (address && address.startsWith("0x000000000000")) {
-      console.log('connect your wallet to continue');
-      navigate("/");
+      props.history.push("/");
     }
   }, []);
 
-  const handleSubmit = async () => {
-    if (
-      title === "" ||
-      description === "" ||
-      category === "" ||
-      location === "" ||
-      thumbnail === "" ||
-      video === ""
-    ) {
-      toast.error("Please fill all the fields", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      return;
-    }
-    uploadThumbnail(thumbnail);
-  };
+  const handleInputChange = (e) =>
+    setFormInput({ ...formInput, [e.target.name]: e.target.value });
 
-  const uploadThumbnail = async (thumbnail) => {
-    toast("Uploading thumbnail...", {
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
-
-    console.log("uploading thumbnail");
+  const handleAddVideo = async (e) => {
+    e.preventDefault();
     try {
-      const added = await client.add(thumbnail);
-      uploadVideo(added.path);
-      toast.success("Thumbnail uploaded successfully", {
+      if (
+        !["title", "description", "category", "location"].every(
+          (key) => formInput[key]
+        )
+      ) {
+        // alert("Please fill out all fields");
+        return toast.error("Please fill all the fields", {
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff"
+          }
+        });
+      }
+
+      if (!thumbnail || !video) {
+        return toast.error("Please add video and thumbnail.!", {
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff"
+          }
+        });
+      }
+      setLoading(true);
+      const { path: thumbnailHash } = await ipfsClient.add(thumbnail);
+      const { path: videoHash } = await ipfsClient.add(video);
+      console.log("Adding video to contract");
+
+      let contract = getContract();
+
+      const tx = await contract.addVideo(
+        formInput.title,
+        formInput.description,
+        formInput.category,
+        formInput.location,
+        thumbnailHash,
+        videoHash
+      );
+
+      console.log("Transaction submitted. hash: ", tx.hash);
+      await tx.wait();
+      setLoading(false);
+      toast.success("Video added successfully", {
+        position: "top-right",
         style: {
           borderRadius: "10px",
           background: "#333",
-          color: "#fff",
-        },
+          color: "#fff"
+        }
       });
+      props.history.push("/videos");
     } catch (error) {
-      console.log("Error uploading file: ", error);
+      setLoading(false);
+      console.log("Error uploading video: ", error);
+      props.history.goBack();
     }
-  };
-
-  const uploadVideo = async (thumbnail) => {
-    console.log("uploading video");
-    toast("Uploading video...", {
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
-
-    try {
-      const added = await client.add(video);
-      console.log({
-        uploadVIdeo: added.path,
-        thumbnail: thumbnail,
-      });
-      await saveVideo(added.path, thumbnail);
-      toast.success("Video uploaded successfully", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      goBack();
-    } catch (error) {
-      console.log("Error uploading file: ", error);
-    }
-  };
-
-  const saveVideo = async (video, thumbnail) => {
-    let data = {
-      title,
-      description,
-      category,
-      location,
-      thumbnail,
-      video,
-    };
-    console.log("Saving video", data);
-    let contract = await getContract();
-    let UploadedDate = String(new Date());
-
-    console.log("UploadedDate", UploadedDate);
-
-    // Show successfully alert
-
-    await contract.uploadVideo(
-      video,
-      title,
-      description,
-      location,
-      category,
-      thumbnail,
-      isAudio,
-      UploadedDate
-    );
-  };
-
-  const goBack = () => {
-    window.history.back();
   };
 
   return (
@@ -145,22 +99,19 @@ export default function Upload() {
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-
         <div className="mt-5 mr-10 flex  justify-end">
           <div className="flex items-center">
             <button
               className="bg-transparent  dark:text-[#9CA3AF] py-2 px-6 border rounded-lg  border-gray-600  mr-6"
-              onClick={() => {
-                goBack();
-              }}
+              disabled={loading}
+              onClick={props.history.goBack}
             >
               Discard
             </button>
             <button
-              onClick={() => {
-                handleSubmit();
-              }}
               className="bg-blue-500 hover:bg-blue-700 text-white  py-2  rounded-lg flex px-4 justify-between flex-row items-center"
+              onClick={handleAddVideo}
+              disabled={loading}
             >
               <BiCloud />
               <p className="ml-2">Upload</p>
@@ -173,8 +124,9 @@ export default function Upload() {
               Title
             </label>
             <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formInput.title || ""}
+              name="title"
+              onChange={handleInputChange}
               placeholder="Rick Astley - Never Gonna Give You Up (Official Music Video)"
               className="w-[90%] dark:text-white  dark:placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border border-borderWhiteGray bg-white dark:bg-backgroundBlack dark:border-[#444752] focus:outline-none"
             />
@@ -182,8 +134,9 @@ export default function Upload() {
               Description
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={formInput.description || ""}
+              onChange={handleInputChange}
               placeholder="Never Gonna Give You Up was a global smash on its release in July 1987, topping the charts in 25 countries including Rick’s native UK and the US Billboard Hot 100.  It also won the Brit Award for Best single in 1988. Stock Aitken and Waterman wrote and produced the track which was the lead-off single and lead track from Rick’s debut LP “Whenever You Need Somebody."
               className="w-[90%] dark:text-white  dark:placeholder:text-gray-600 rounded-md mt-2  h-32 p-2 border border-borderWhiteGray bg-white dark:bg-backgroundBlack dark:border-[#444752] focus:outline-none"
             />
@@ -194,8 +147,9 @@ export default function Upload() {
                   Location
                 </label>
                 <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  name="location"
+                  value={formInput.location || ""}
+                  onChange={handleInputChange}
                   type="text"
                   placeholder="Bali - Indonesia"
                   className="rounded-md dark:text-white mt-2 dark:placeholder:text-gray-600  h-12 p-2 border border-borderWhiteGray bg-white dark:bg-backgroundBlack dark:border-[#444752] focus:outline-none"
@@ -206,15 +160,16 @@ export default function Upload() {
                   Category
                 </label>
                 <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  name="category"
+                  value={formInput.category || ""}
+                  onChange={handleInputChange}
                   className=" rounded-md dark:text-white mt-2  h-12 p-2 dark:border-gray-600 border border-borderWhiteGray bg-white dark:bg-backgroundBlack dark:text-[#9CA3AF] focus:outline-none"
                 >
+                  <option>Entertainment</option>
                   <option>Music</option>
                   <option>Sports</option>
                   <option>Gaming</option>
                   <option>News</option>
-                  <option>Entertainment</option>
                   <option>Education</option>
                   <option>Science & Technology</option>
                   <option>Travel</option>
@@ -248,6 +203,7 @@ export default function Upload() {
 
             <input
               type="file"
+              name="thumbnail"
               className="hidden"
               ref={thumbnailRef}
               onChange={(e) => {
@@ -291,6 +247,7 @@ export default function Upload() {
         </div>
         <input
           type="file"
+          name="video"
           className="hidden"
           ref={videoRef}
           accept={isAudio ? "audio/*" : "video/*"}

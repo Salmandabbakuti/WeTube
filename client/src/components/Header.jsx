@@ -11,7 +11,7 @@ export const Header = ({ search }) => {
   return (
     <header className="w-full flex justify-between h-20 items-center border-b p-4 border-borderWhiteGray dark:border-borderGray">
       <div className=" w-1/3	">
-        <Link to="/app">
+        <Link to="/videos">
           <img width={80} src={Logo} alt="Keep logo" />
         </Link>
       </div>
