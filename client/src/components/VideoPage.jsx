@@ -7,7 +7,7 @@ import VideoCard from "./VideoCard";
 import { Link, useLocation } from "react-router-dom";
 import { GET_VIDEOS } from "../constants/graphqlQueries";
 
-export default function VideoPage(props) {
+export default function VideoPage() {
   const [video, setVideo] = useState(null);
   const [relatedVideos, setRelatedVideos] = useState([]);
   const { state } = useLocation();
@@ -60,10 +60,7 @@ export default function VideoPage(props) {
                 Related Videos
               </h4>
               {relatedVideos.map((video) => (
-                <Link
-                  to={{ pathname: `/video/${video.id}`, state: video }}
-                  key={video.id}
-                >
+                <Link to={`/video/${video.id}`} state={video} key={video.id}>
                   <VideoCard video={video} horizontal={true} />
                 </Link>
               ))}

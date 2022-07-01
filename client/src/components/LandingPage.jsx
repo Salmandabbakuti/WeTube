@@ -1,4 +1,7 @@
-export default function LandingPage(props) {
+import { useNavigate } from "react-router-dom";
+
+export default function LandingPage() {
+  const navigate = useNavigate();
 
   const connectWallet = async () => {
     try {
@@ -14,7 +17,7 @@ export default function LandingPage(props) {
       });
       console.log("Connected", accounts[0]);
       localStorage.setItem("walletAddress", accounts[0]);
-      props.history.push("/videos");
+      navigate("/videos");
     } catch (error) {
       console.log(error);
     }
@@ -22,7 +25,7 @@ export default function LandingPage(props) {
 
   const continueWithoutSigningIn = () => {
     localStorage.setItem("walletAddress", "0x0000000000000000000000000000000000000000");
-    props.history.push("/videos");
+    navigate("/videos");
   };
 
   return (
