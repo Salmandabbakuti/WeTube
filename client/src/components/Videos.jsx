@@ -53,7 +53,7 @@ export default function Videos() {
         <Header search={(text) => setTitleSearchInput(text)} />
         <div className="flex flex-row flex-wrap">
           {videos.map((video) => (
-            <Link to={{ pathname: `/video/${video.id}`, state: video }} key={video.id} >
+            <Link to={`/video/${video.id}`} state={video} key={video.id} >
               <div className="w-80">
                 <VideoCard video={video} />
               </div>

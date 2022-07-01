@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "./Header";
 import Sidebar from "./Sidebar";
 import { create } from "ipfs-http-client";
@@ -7,12 +8,13 @@ import toast from "react-hot-toast";
 import getContract from "../utils/getContract";
 import "react-toggle/style.css"; // for ES6 modules
 
-export default function Upload(props) {
+export default function Upload() {
   const [thumbnail, setThumbnail] = useState("");
   const [video, setVideo] = useState("");
   const [isAudio, setIsAudio] = useState(false);
   const [formInput, setFormInput] = useState({ category: 'Entertainment' });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const ipfsClient = create({
     host: "ipfs.infura.io",
@@ -25,7 +27,7 @@ export default function Upload(props) {
   useEffect(() => {
     const address = localStorage.getItem("walletAddress");
     if (address && address.startsWith("0x000000000000")) {
-      props.history.push("/");
+      navigate("/");
     }
   }, []);
 
@@ -86,11 +88,11 @@ export default function Upload(props) {
           color: "#fff"
         }
       });
-      props.history.push("/videos");
+      navigate("/videos");
     } catch (error) {
       setLoading(false);
       console.log("Error uploading video: ", error);
-      props.history.goBack();
+      navigate(-1);
     }
   };
 
@@ -104,7 +106,7 @@ export default function Upload(props) {
             <button
               className="bg-transparent  dark:text-[#9CA3AF] py-2 px-6 border rounded-lg  border-gray-600  mr-6"
               disabled={loading}
-              onClick={props.history.goBack}
+              onClick={() => navigate(-1)}
             >
               Discard
             </button>
