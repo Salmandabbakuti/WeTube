@@ -16,7 +16,7 @@ export default function VideoCard({ horizontal, video }) {
             ? "object-cover rounded-lg w-60  "
             : "object-cover rounded-lg w-full h-40"
         }
-        src={`https://ipfs.infura.io/ipfs/${video.thumbnailHash}`}
+        src={`https://ipfs.io/ipfs/${video.thumbnailHash}`}
         alt=""
       />
       <div className={horizontal && "ml-3  w-80"}>

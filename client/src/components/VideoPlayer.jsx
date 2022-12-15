@@ -2,7 +2,7 @@ import Plyr from "plyr-react";
 import "plyr-react/dist/plyr.css";
 
 export default function VideoPlayer({ hash }) {
-  let url = "https://ipfs.infura.io/ipfs/" + hash;
+  let url = "https://ipfs.io/ipfs/" + hash;
   return (
     <Plyr
       source={{
